@@ -1,0 +1,89 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        // Map cafeteria options to their respective menu files
+        Map<String, String> cafeteriaMenus = new HashMap<>();
+        cafeteriaMenus.put("1", "menu.csv");
+        cafeteriaMenus.put("2", "menu2.csv");
+        cafeteriaMenus.put("3", "menu3.csv");
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Dear user, select: \n1 for Munchies Cafeteria\n2 for Akorno Cafeteria\n3 for Hallmark Cafeteria");
+
+        String userChoice = scanner.nextLine();
+        String myMenu = cafeteriaMenus.get(userChoice);
+
+        if (myMenu == null) {
+            System.out.println("Invalid selection. Please restart the program and choose a valid option.");
+            return;
+        }
+
+        // Welcome message
+        String cafeteriaName = switch (userChoice) {
+            case "1" -> "Munchies Cafeteria";
+            case "2" -> "Akorno Cafeteria";
+            case "3" -> "Hallmark Cafeteria";
+            default -> throw new IllegalStateException("Unexpected value: " + userChoice);
+        };
+        System.out.println("\nWelcome to " + cafeteriaName + "! Here is the menu:");
+
+        // Create and display menu
+        Menu menu = new Menu();
+        menu.displayMenu();
+
+        // Create item categories
+        Food food = new Food(myMenu);
+        Drinks drink = new Drinks(myMenu);
+        Fruits fruit = new Fruits(myMenu);
+        Dessert dessert = new Dessert(myMenu);
+        Snacks snack = new Snacks(myMenu);
+
+
+        Map<String, Integer> priceMap = new HashMap<>();
+        priceMap.putAll(food.getItemPriceMap());
+        priceMap.putAll(drink.getItemPriceMap());
+        priceMap.putAll(fruit.getItemPriceMap());
+        priceMap.putAll(dessert.getItemPriceMap());
+        priceMap.putAll(snack.getItemPriceMap());
+
+        // Get individual price maps
+        Map<String, Integer> foodPriceMap = food.getItemPriceMap();
+        Map<String, Integer> drinkPriceMap = drink.getItemPriceMap();
+        Map<String, Integer> fruitPriceMap = fruit.getItemPriceMap();
+        Map<String, Integer> dessertPriceMap = dessert.getItemPriceMap();
+        Map<String, Integer> snackPriceMap = snack.getItemPriceMap();
+
+
+        //Create a new order
+        Order order = new Order();
+
+        //Collect user orders
+        order.makeOrder(menu, foodPriceMap, drinkPriceMap, fruitPriceMap, dessertPriceMap, snackPriceMap);
+
+
+        // Display the receipt
+        Receipt receipt = new Receipt(order, priceMap);
+        receipt.displayReceipt();
+
+        // Create a TrackingOrder object to manage the preparation and tracking
+        TrackingOrder trackingOrder = new TrackingOrder(order, 5);  // Assume 5 minutes preparation time
+
+        // Start the preparation
+        //trackingOrder.startPreparation();
+
+        // Check the status after some time (for example, after 2 seconds)
+        try {
+          Thread.sleep(2000);  // Simulate a brief delay
+             trackingOrder.checkStatus();  // Check the status while it's in progress
+          } catch (InterruptedException e) {
+          e.printStackTrace();
+          }
+
+        Chat chat = new Chat("User", "Server");
+        //chat.startChat();
+
+    }
+}
