@@ -1,0 +1,2 @@
+# RestaurantOrderSystem
+ This Java-based project is an Object-Oriented Programming application designed to facilitate restaurant operations by managing customer orders and facilitating efficient deliveries. It integrates features such as order placement, menu management, delivery tracking, waiting time, and customer management. The system leverages OOP principles such as encapsulation, inheritance, polymorphism, and exceptions to ensure scalability and maintainability.
